@@ -3,3 +3,30 @@
 数据集主要是ImageNet的比赛数据集；
 
 它包含八个学习层——五个卷积层和三个全连接层。
+
+![image](https://github.com/BlackApple-LMZ/paper_learning/edit/main/2020/0909-0910-AlexNet-imagenet-classification-with-deep-convolutional-neural-networks/11.png)
+
+提出了：
+1将ReLU函数发扬光大、2在多个GPU上训练、
+3 Local Response Normalization：这个后面提到的并不多，感觉没有BN流行
+BN是对不同的样本进行归一化，就是让样本0均值，方差也归一化；
+LRN是对不同kernel的输出进行归一化，就是对相同的batch，对相同的样本，经过不同的kernel之后会形成不同的输出，然后对这些输出进行归一化；
+https://blog.csdn.net/yangdashi888/article/details/77918311
+4 Overlapping Pooling：就是之前的池化是不重叠的，alexNet搞了一个重叠池化，这样计算更多，更容易过拟合
+
+参数大概6000万个，很容易过拟合，因此提出了两种解决过拟合的方法：
+1 数据增强：第一种形式包括平移图像和水平映射，从256×256图像中随机提取224×224的图像块（及其水平映射），这样数据扩充了2048倍；第二种形式的数据增强包括改变训练图像中RGB通道的灰度。
+2 就是dropout
+
+训练细节：
+我们使用随机梯度下降法来训练我们的模型，每个batch有128个样本，动量（momentum）为0.9，权重衰减（weight decay）为0.0005。我们发现这种较小的权重衰减对于模型的训练很重要。换句话说，权重衰减在这里不仅仅是一个正则化方法：它减少了模型的训练误差。权重ω的更新法则是：
+
+![image](https://github.com/BlackApple-LMZ/paper_learning/edit/main/2020/0909-0910-AlexNet-imagenet-classification-with-deep-convolutional-neural-networks/22.png)
+
+其中，i表示当前的迭代次数，v表示动量（momentum），ε表示学习率， ⟨∂L∂ω|ωi⟩Di是第i批次的目标函数关于w的导数（wi的偏导数）Di的平均值。
+权重的初始化：
+我们使用标准差为0.01、均值为0的高斯分布来初始化各层的权重。我们使用常数1来初始化了网络中的第二个、第四个和第五个卷积层以及全连接层中的隐含层中的所有偏置参数。这种初始化权重的方法通过向ReLU提供了正的输入，来加速前期的训练。我们使用常数0来初始化剩余层中的偏置参数。
+学习率：
+我们对所有层都使用相同的学习率，在训练过程中又手动进行了调整。我们遵循的启发式方法是：以当前的学习速率训练，验证集上的错误率停止降低时，将学习速率除以10.学习率初始时设为0.01，并且在终止前减少3次。
+
+
