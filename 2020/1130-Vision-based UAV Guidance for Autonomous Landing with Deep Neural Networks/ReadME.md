@@ -23,7 +23,8 @@
 - 基于NVIDIA的一个网络，通过输入汽车视角的图片预测方向盘的转角；
 - 网络采用的是一个steer angle预测的网络：五个卷积层后面跟了flatten和5个全连接层；
 - 激活函数采用的是ReLU函数。
- 
+
+![image](https://github.com/BlackApple-LMZ/paper_learning/edit/main/2020/1130-Vision-based%20UAV%20Guidance%20for%20Autonomous%20Landing%20with%20Deep%20Neural%20Networks/22.png)
 ### 训练的初始化策略：
 学习率10e-5，动量0.99，采用Nadam作为优化方法，当验证的损失函数5个epoch不下降的时候，就将学习率减半；角度是以弧度表示的，batch size是32；loss函数采用的是MSE。
 
